@@ -16,6 +16,13 @@ class CreateUserTable extends Migration
                 'unsigned' => TRUE,
                 'auto_increment' => TRUE
             ],
+
+            'Username' => [
+                'type' => 'VARCHAR',
+                'constraint' => '255',
+                'null' => false,
+                'default' => 'default_username', // Set a default value
+            ],
             'FirstName' => [
                 'type' => 'VARCHAR',
                 'constraint' => '255',

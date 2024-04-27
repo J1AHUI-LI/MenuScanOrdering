@@ -16,8 +16,38 @@ class OrderingController extends BaseController
 
     public function index()
     {
+        if ($this->request->getMethod() === 'post') {
+            // Receive form data
+            $username = $this->request->getPost('Username');
+            $password = $this->request->getPost('Password');
+            $role = $this->request->getPost('Role');
+            
+            // Validate input (add your validation rules)
+            if (empty($username) || empty($password) || empty($role)) {
+                // Redirect back to login page with error message
+                return redirect()->to(base_url(''))->with('error', 'Please fill in all fields.');
+            }
+
+            // Authenticate user (add your authentication logic)
+            $userModel = new \App\Models\UserModel();
+            $user = $userModel->where('Username', $username)->first();
+
+            if (!$user || !password_verify($password, $user['Password']) || $user['Role'] !== $role) {
+                // Authentication failed, redirect back to login page with error message
+                return redirect()->to(base_url(''))->with('error', 'Invalid user ID, password, or user type.');
+            }
+
+            // Authentication successful, store user data in session
+            $session = session();
+            $session->set('user_id', $user['UserID']);
+            $session->set('user_role', $user['Role']);
+
+            // Redirect to dashboard
+            return redirect()->to(base_url('dashboard'));
+        }
         return view('login');
     }
+
 
     public function dashboard()
     {
@@ -64,13 +94,42 @@ class OrderingController extends BaseController
 
     public function register()
     {
+        if ($this->request->getMethod() === 'post') {
+            // Receive form data
+            $username = $this->request->getPost('Username');
+            $password = $this->request->getPost('Password');
+            $confirmPassword = $this->request->getPost('ConfirmPassword');
+            $role = $this->request->getPost('Role');
+
+            // Validate input (add your validation rules)
+            if (empty($username) || empty($password) || empty($confirmPassword) || empty($role)) {
+                // Redirect back to register page with error message
+                return redirect()->to(base_url('register'))->with('error', 'Please fill in all fields.');
+            }
+
+            if ($password !== $confirmPassword) {
+                // Redirect back to register page with error message
+                return redirect()->to(base_url('register'))->with('error', 'Passwords do not match.');
+            }
+
+            // Create new user (add your user creation logic)
+            $userModel = new \App\Models\UserModel();
+            $data = [
+                'Username' => $username,
+                'Password' => password_hash($password, PASSWORD_DEFAULT), // Hash the password
+                'Role' => $role, // Add role to the data array
+                // Add other fields if needed
+            ];
+            $userModel->insert($data);
+
+            // Redirect to login page with success message
+            return redirect()->to(base_url(''))->with('success', 'Registration successful. You can now log in.');
+        }
+
         return view('register');
     }
 
-    public function login()
-    {
-        return view('login');
-    }
+
 
     public function check_revenue()
     {
@@ -88,115 +147,3 @@ class OrderingController extends BaseController
 }
 
 
-
-
-
-// class OrderingController extends BaseController
-// {
-//     public function __construct()
-//     {
-//         // Load the URL helper, it will be useful in the next steps
-//         // Adding this within the __construct() function will make it 
-//         // available to all views in the ResumeController
-//         helper('url'); 
-//     }
-
-//     public function index()
-//     {
-//         // Check if the user is logged in, if not, redirect to the login page
-//         if (!logged_in()) {
-//             return redirect()->to('login');
-//         }
-
-//         // User is logged in, display the login page
-//         return view('login');
-//     }
-
-//     public function dashboard()
-//     {
-//         // Check if the user is logged in, if not, redirect to the login page
-//         if (!logged_in()) {
-//             return redirect()->to('login');
-//         }
-
-//         // User is logged in, display the login page
-//         return view('dashboard');
-//     }
-
-//     public function menu_management()
-//     {
-//         // Check if the user is logged in, if not, redirect to the login page
-//         if (!logged_in()) {
-//             return redirect()->to('login');
-//         }
-
-//         // User is logged in, display the login page
-//         return view('menu_management');
-//     }
-
-//     public function table_management()
-//     {
-//         // Check if the user is logged in, if not, redirect to the login page
-//         if (!logged_in()) {
-//             return redirect()->to('login');
-//         }
-
-//         // User is logged in, display the login page
-//         return view('table_management');
-//     }
-
-//     public function order_management()
-//     {
-//         // Check if the user is logged in, if not, redirect to the login page
-//         if (!logged_in()) {
-//             return redirect()->to('login');
-//         }
-
-//         // User is logged in, display the login page
-//         return view('order_management');
-//     }
-
-//     public function forgot_password()
-//     {
-//         // Check if the user is logged in, if not, redirect to the login page
-//         if (!logged_in()) {
-//             return redirect()->to('login');
-//         }
-
-//         // User is logged in, display the login page
-//         return view('forgot_password');
-//     }
-
-//     public function menu()
-//     {
-//         // Check if the user is logged in, if not, redirect to the login page
-//         if (!logged_in()) {
-//             return redirect()->to('login');
-//         }
-
-//         // User is logged in, display the login page
-//         return view('menu');
-//     }
-
-//     public function register()
-//     {
-//         // Check if the user is logged in, if not, redirect to the login page
-//         if (!logged_in()) {
-//             return redirect()->to('login');
-//         }
-
-//         // User is logged in, display the login page
-//         return view('register');
-//     }
-
-//     public function qr_code_management()
-//     {
-//         // Check if the user is logged in, if not, redirect to the login page
-//         if (!logged_in()) {
-//             return redirect()->to('login');
-//         }
-
-//         // User is logged in, display the login page
-//         return view('qr_code_management');
-//     }
-// }

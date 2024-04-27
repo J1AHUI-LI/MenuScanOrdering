@@ -17,40 +17,41 @@
             </li>
             <li>
                 <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                    <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline"> Menu Management</span>
+                    <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline"> Menu </span>
                 </a>
                 <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
                     <li>
                         <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">normal menu</span></a>
                     </li>
-                    <li>
-                        <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Special menu</span></a>
-                    </li>
                 </ul>
             </li>
             <li>
                 <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                    <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Orders</span>
+                    <i class="fs-4 bi-receipt"></i> <span class="ms-1 d-none d-sm-inline">Order</span>
                 </a>
                 <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
                     <li class="w-100">
                         <a href="<?= base_url('order_management'); ?>" class="nav-link px-0"> <span class="d-none d-sm-inline"> Order management</span> 1</a>
                     </li>
-                    <li>
-                        <a href="<?= base_url('dashboard'); ?>" class="nav-link px-0"> <span class="d-none d-sm-inline"> Table Management</span> 2</a>
+                </ul>
+            </li>
+            <li>
+                <a href="#submenu5" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                    <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Table</span>
+                </a>
+                <ul class="collapse nav flex-column ms-1" id="submenu5" data-bs-parent="#menu">
+                    <li class="w-100">
+                        <a href="<?= base_url('order_management'); ?>" class="nav-link px-0"> <span class="d-none d-sm-inline"> Table management</span> 1</a>
                     </li>
                 </ul>
             </li>
             <li>
                 <a href="#submenu4" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                    <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline"> QR Code Management</span>
+                    <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline"> QR Code</span>
                 </a>
                 <ul class="collapse nav flex-column ms-1" id="submenu4" data-bs-parent="#menu">
                     <li class="w-100">
                         <a href="<?= base_url('qr_code_management'); ?>" class="nav-link px-0"> <span class="d-none d-sm-inline"> Generate QR code</span></a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url('qr_code_management'); ?>" class="nav-link px-0"> <span class="d-none d-sm-inline"> Delete QR code</span></a>
                     </li>
                 </ul>
             </li>
