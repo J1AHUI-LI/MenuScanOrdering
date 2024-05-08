@@ -20,8 +20,10 @@
         );
 
         foreach ($Table as $table) {
-            $qrcode = (new QRCode($options))->render('Table ' . $table['TableID']);
+            $url = base_url('menu?table_id=' . $table['TableID']);
+            $qrcode = (new QRCode($options))->render($url);
         ?>
+
         <div class="col-md-4">
             <div class="table">
                 <h2>Table <?= $table['TableID'] ?></h2>

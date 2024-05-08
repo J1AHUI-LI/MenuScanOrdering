@@ -26,11 +26,11 @@
       <td><?= esc($order['Status']) ?></td>
 
       <td>
-        <div class="btn-group" role="group" aria-label="Basic example">
-          <button type="button" class="btn btn-success">Confirm</button>
-          <button type="button" class="btn btn-danger">Cancel</button>
-          <button type="button" class="btn btn-info">Details</button>
-        </div>
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <a href="/menu2ordering<?= route_to('complete_order', $order['OrderID']) ?>" class="btn btn-success">Confirm</a>
+            <a href="/menu2ordering<?= route_to('cancel_order', $order['OrderID']) ?>" class="btn btn-danger">Cancel</a>
+            <a href="/menu2ordering<?= route_to('view_order_details', $order['OrderID']) ?>" class="btn btn-info">Details</a>
+          </div>
       </td>
     </tr>
   <?php endforeach; ?>
@@ -38,5 +38,6 @@
 </table>
 </div>
 <!-- End of Order Management -->
+
 
 <?= $this->endSection() ?>

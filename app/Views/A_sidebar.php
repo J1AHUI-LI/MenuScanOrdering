@@ -13,6 +13,10 @@
                     <li class="w-100">
                         <a href="<?= base_url('revenue'); ?>" class="nav-link px-0"> <span class="d-none d-sm-inline"> Revenue</span></a>
                     </li>
+                    <li class="w-100">
+                        <a href="<?= base_url('user_management'); ?>" class="nav-link px-0"> <span class="d-none d-sm-inline"> User Management</span></a>
+                    </li>
+                    
                 </ul>
             </li>
             <li>
@@ -21,7 +25,10 @@
                 </a>
                 <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
                     <li>
-                        <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">normal menu</span></a>
+                        <a href="<?= base_url('menu_management'); ?>" class="nav-link px-0"> <span class="d-none d-sm-inline">Items</span></a>
+                    </li>
+                    <li>
+                        <a href="<?= base_url('admin_menu'); ?>" class="nav-link px-0"> <span class="d-none d-sm-inline">Menu</span></a>
                     </li>
                 </ul>
             </li>
@@ -41,7 +48,7 @@
                 </a>
                 <ul class="collapse nav flex-column ms-1" id="submenu5" data-bs-parent="#menu">
                     <li class="w-100">
-                        <a href="<?= base_url('order_management'); ?>" class="nav-link px-0"> <span class="d-none d-sm-inline"> Table management</span> 1</a>
+                        <a href="<?= base_url('table_management'); ?>" class="nav-link px-0"> <span class="d-none d-sm-inline"> Table management</span> 1</a>
                     </li>
                 </ul>
             </li>
@@ -60,20 +67,15 @@
         <!-- user state -->
         <div class="dropdown pb-4">
             <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="<?= base_url('uifaces-popular-image.jpg'); ?>" alt="hugenerd" width="30" height="30" class="rounded-circle">
-                <span class="d-none d-sm-inline mx-1">Admin</span>
+                <img src="<?= base_url('img/uifaces-popular-image.jpg'); ?>" alt="hugenerd" width="30" height="30" class="rounded-circle">
+                <span class="d-none d-sm-inline mx-1"><?= session('user_role') ?></span>
             </a>
             <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                <li><a class="dropdown-item" href="#">New project...</a></li>
-                <li><a class="dropdown-item" href="#">Settings</a></li>
-                <li><a class="dropdown-item" href="#">Profile</a></li>
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#">Sign out</a></li>
+                <li><a class="dropdown-item" href="<?= base_url('logout'); ?>">Sign out</a></li>
             </ul>
         </div>
         <!-- end of user state -->
+
     </div>
 </div>
 <!-- End of Sidebar Offcanvas -->

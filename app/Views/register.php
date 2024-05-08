@@ -2,7 +2,7 @@
 <html lang="en">
 <?php include 'A_head.php'; ?>
 <body>
-    <?php include 'A_navbar.php'; ?>
+    <?php include 'A_user_navbar.php'; ?>
 
     <!--  Register Form  -->
     <section class="register-form" style="min-height: 100vh;">

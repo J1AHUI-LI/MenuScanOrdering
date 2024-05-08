@@ -10,14 +10,14 @@ class OrderSeeder extends Seeder
     {
         $data = [
             [
-                'UserID' => 1,
+                'UserID' => 8,
                 'TableID' => 1,
                 'Status' => 'Pending',
                 'OrderTime' => '',
             ],
             [
-                'UserID' => 2,
-                'TableID' => 2,
+                'UserID' => 9,
+                'TableID' => 32,
                 'Status' => 'Completed',
                 'OrderTime' => '',
             ],

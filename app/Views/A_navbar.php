@@ -23,13 +23,12 @@
                 <li class="nav-item <?= service('router')->getMatchedRoute()[0] == 'order_management' ? 'active' : ''; ?>">
                     <a class="nav-link" href="<?= base_url('order_management'); ?>"><i class="bi bi-bag-check"></i> Order Management</a>
                 </li>
-                <li class="nav-item <?= service('router')->getMatchedRoute()[0] == 'login' ? 'active' : ''; ?>">
+                <!-- <li class="nav-item <?= service('router')->getMatchedRoute()[0] == 'login' ? 'active' : ''; ?>">
                     <a class="nav-link" href="<?= base_url(''); ?>"><i class="bi bi-person-circle"></i> Log in</a>
-                </li>
+                </li> -->
             </ul>
         </div>
     </div>
 </nav>
-
 
 <!-- End of Navbar -->

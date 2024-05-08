@@ -1,7 +1,7 @@
 <?php namespace App\Controllers;
 
 use CodeIgniter\Controller;
-// 引入 Twilio SDK
+
 use Twilio\Rest\Client;
 
 class OrderingController extends BaseController
@@ -42,10 +42,25 @@ class OrderingController extends BaseController
             $session->set('user_id', $user['UserID']);
             $session->set('user_role', $user['Role']);
 
-            // Redirect to dashboard
-            return redirect()->to(base_url('dashboard'));
+            // Redirect to dashboard or menu based on user role
+            if ($role === 'User') {
+                return redirect()->to(base_url('menu'));
+            } else {
+                return redirect()->to(base_url('dashboard'));
+            }
         }
         return view('login');
+    }
+
+
+    public function logout()
+    {
+        // Destroy the session
+        $session = session();
+        $session->destroy();
+
+        // Redirect to login page
+        return redirect()->to(base_url(''));
     }
 
 
@@ -56,11 +71,75 @@ class OrderingController extends BaseController
 
     public function menu_management()
     {
+        $vendorModel = new \App\Models\VendorModel();
+        $data['vendors'] = $vendorModel->findAll();
+
         $menuModel = new \App\Models\MenuModel();
         $data['dishes'] = $menuModel->findAll();
 
         return view('menu_management', $data);
     }
+
+    public function admin_menu()
+    {
+        $vendorModel = new \App\Models\VendorModel();
+        $data['vendors'] = $vendorModel->findAll();
+
+        $menuModel = new \App\Models\MenuModel();
+        $data['dishes'] = $menuModel->findAll();
+
+        return view('admin_menu', $data);
+    }
+
+    public function edit_dish($menuId)
+    {
+        $menuModel = new \App\Models\MenuModel();
+        $data['dishes'] = $menuModel->findAll();
+        $data['editDishId'] = $menuId;
+
+        return view('menu_management', $data);
+    }
+
+
+    public function update_dish($menuId)
+    {
+        $menuModel = new \App\Models\MenuModel();
+
+        $data = [
+            'ItemName' => $this->request->getPost('dishName'),
+            'Price' => $this->request->getPost('dishPrice'),
+            // Add other fields if needed
+        ];
+
+        $menuModel->update($menuId, $data);
+
+        return redirect()->to(base_url('menu_management'));
+    }
+
+    public function delete_dish($menuId)
+    {
+        $menuModel = new \App\Models\MenuModel();
+        $menuModel->delete($menuId);
+
+        return redirect()->to(base_url('menu_management'));
+    }
+
+    public function add_dish()
+    {
+        $menuModel = new \App\Models\MenuModel();
+
+        $data = [
+            'VendorID'=> $this->request->getPost('vendorId'),
+            'ItemName' => $this->request->getPost('dishName'),
+            'Price' => $this->request->getPost('dishPrice'),
+            // Add other fields if needed
+        ];
+
+        $menuModel->insert($data);
+
+        return redirect()->to(base_url('menu_management'));
+    }
+
 
     public function table_management()
     {
@@ -73,6 +152,76 @@ class OrderingController extends BaseController
         return view('table_management', $data);
     }
 
+    public function edit_table($tableId)
+    {
+        if ($this->request->getMethod() === 'post') {
+            $tableModel = new \App\Models\TablesModel();
+            $status = $this->request->getPost('Status');
+
+            // Validate status and set default if invalid
+            $validStatus = ['Available', 'Occupied', 'Reserved'];
+            if (!in_array($status, $validStatus)) {
+                $status = 'Available'; // Set default value
+                session()->setFlashdata('warning', 'Invalid status. Defaulted to "Available".');
+            }
+
+            $data = [
+                'Status' => $status,
+                // Update other fields if needed
+            ];
+            $tableModel->update($tableId, $data);
+
+            session()->setFlashdata('message', 'Table updated successfully');
+        }
+
+        return redirect()->to(base_url('table_management'));
+    }
+
+    public function add_table()
+    {
+        if ($this->request->getMethod() === 'post') {
+            $tableModel = new \App\Models\TablesModel();
+            $vendorModel = new \App\Models\VendorModel();
+
+            $data = [
+                'VendorID' => $this->request->getPost('vendorId'),
+                'Seats' => $this->request->getPost('seats'),
+                'Status' => $this->request->getPost('status'),
+                // Add other fields if needed
+            ];
+            $tableModel->insert($data);
+
+            // Update TotalTable in Vendor table
+            $vendorId = $this->request->getPost('vendorId');
+            $vendor = $vendorModel->find($vendorId);
+            $vendorModel->update($vendorId, ['TotalTable' => $vendor['TotalTable'] + 1]);
+
+            session()->setFlashdata('message', 'Table added successfully');
+        }
+
+        return redirect()->to(base_url('table_management'));
+    }
+
+
+    public function delete_table($tableId)
+    {
+        $tableModel = new \App\Models\TablesModel();
+        $vendorModel = new \App\Models\VendorModel();
+
+        // Get the VendorID of the table
+        $table = $tableModel->find($tableId);
+        $vendorId = $table['VendorID'];
+
+        $tableModel->delete($tableId);
+
+        // Update TotalTable in Vendor table
+        $vendor = $vendorModel->find($vendorId);
+        $vendorModel->update($vendorId, ['TotalTable' => $vendor['TotalTable'] - 1]);
+
+        session()->setFlashdata('message', 'Table deleted successfully');
+        return redirect()->to(base_url('table_management'));
+    }
+
     public function order_management()
     {
         $orderModel = new \App\Models\OrderModel();
@@ -81,15 +230,92 @@ class OrderingController extends BaseController
         return view('order_management', $data);
     }
 
-
-    public function forgot_password()
+    public function complete_order($orderId)
     {
-        return view('forgot_password');
+        $orderModel = new \App\Models\OrderModel();
+        $orderModel->update($orderId, ['Status' => 'Complete']);
+        
+        session()->setFlashdata('message', 'Order Complete successfully');
+        return redirect()->to(base_url('order_management'));
+    }
+
+    public function cancel_order($orderId)
+    {
+        $orderModel = new \App\Models\OrderModel();
+        $orderModel->update($orderId, ['Status' => 'Cancelled']);
+
+        session()->setFlashdata('message', 'Order cancelled successfully');
+        return redirect()->to(base_url('order_management'));
+    }
+
+    public function view_order_details($orderId)
+    {
+        $orderModel = new \App\Models\OrderModel();
+        $orderModel->update($orderId, ['OrderTime' => date('Y-m-d H:i:s')]);
+
+        $data['orders'] = $orderModel->findAll();
+
+        return view('order_management', $data);
     }
 
     public function menu()
     {
         return view('menu');
+    }
+
+    public function menu_forordering()
+    {
+        $vendorModel = new \App\Models\VendorModel();
+        $data['vendors'] = $vendorModel->findAll();
+
+        $menuModel = new \App\Models\MenuModel();
+        $data['dishes'] = $menuModel->findAll();
+
+        return view('menu_forordering', $data);
+    }
+
+    public function cart()
+    {
+        $cart = session()->get('cart', []);
+
+        return view('cart');
+    }
+
+    public function addToCart()
+    {
+        if ($this->request->getMethod() === 'post') {
+            $itemName = $this->request->getVar('ItemName');
+            $price = $this->request->getVar('Price'); // 注意这里修改为正确的键
+            $vendorId = $this->request->getVar('VendorID');
+
+            $cart = session()->get('cart', []);
+            $cartItem = [
+                'itemName' => $itemName,
+                'price' => $price,
+                'vendorId' => $vendorId
+            ];
+            $cart[] = $cartItem;
+            session()->set('cart', $cart);
+
+            return redirect()->to(base_url('cart')); // Redirect to cart page
+        }
+        return redirect()->to(base_url('menu'));
+    }
+
+    public function removeFromCart()
+    {
+        if ($this->request->getMethod() === 'post') {
+            $index = $this->request->getVar('index');
+
+            $cart = session()->get('cart', []);
+            if (isset($cart[$index])) {
+                unset($cart[$index]);
+                session()->set('cart', $cart);
+            }
+
+            return redirect()->to(base_url('cart')); // Redirect back to cart page
+        }
+        return redirect()->to(base_url('menu'));
     }
 
     public function register()
@@ -136,11 +362,71 @@ class OrderingController extends BaseController
         return view('revenue');
     }
     
+    public function user_management()
+    {
+        $userModel = new \App\Models\UserModel();
+        $data['users'] = $userModel->findAll(); // 获取所有用户信息
+
+        return view('user_management', $data); // 加载用户管理页面，并传递用户信息数组到视图中
+    }
+
+    // 编辑用户信息
+    public function edit_user($userID)
+    {
+        $userModel = new \App\Models\UserModel();
+
+        // 从表单中获取用户输入的新信息
+        $newUserData = [
+            'Role' => $this->request->getPost('Role'),
+        ];
+
+        // 更新用户信息
+        $userModel->update($userID, $newUserData);
+
+        // 重定向到用户管理页面
+        return redirect()->to(base_url('user_management'));
+    }
+
+    // 删除用户
+    public function delete_user($userID)
+    {
+        $userModel = new \App\Models\UserModel();
+
+        // 删除指定用户
+        $userModel->delete($userID);
+
+        // 重定向到用户管理页面
+        return redirect()->to(base_url('user_management'));
+    }
+
+
+    public function add_user()
+    {
+        $password = $this->request->getPost('Password');
+
+        $userData = [
+            'FirstName' => $this->request->getPost('FirstName'),
+            'LastName' => $this->request->getPost('LastName'),
+            'Role' => $this->request->getPost('Role'),
+            'Phone' => $this->request->getPost('Phone'),
+            'Address' => $this->request->getPost('Address'),
+            'Password' => password_hash($password, PASSWORD_DEFAULT),
+            'Username' => $this->request->getPost('Email'), 
+        ];
+
+        // 将数据插入数据库
+        $userModel = new \App\Models\UserModel();
+        $userModel->insert($userData);
+
+        // 重定向到用户管理页面
+        return redirect()->to(base_url('user_management'));
+    }
+
     public function qr_code_management()
     {
         $tableModel = new \App\Models\TablesModel();
         $data['Table'] = $tableModel->findAll();
-        $data['totalTables'] = count($data['Table']); // 获取 TableID 的总数
+        $data['totalTables'] = count($data['Table']);
         return view('qr_code_management', $data);
     }
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <?php include 'A_head.php'; ?>
 <body>
-    <?php include 'A_navbar.php'; ?>
+    <?php include 'A_user_navbar.php'; ?>
 
     <!--  Login Form  -->
     <section class="login-form" style="min-height: 100vh;">
@@ -34,7 +34,7 @@
                             <button class="btn btn-info btn-lg btn-block" type="submit">Login</button>
                         </div>
 
-                        <p class="small mb-5 pb-lg-2"><a class="text-muted" href="<?= base_url('forgot_password'); ?>">Forgot password?</a></p>
+                        <!-- <p class="small mb-5 pb-lg-2"><a class="text-muted" href="<?= base_url('forgot_password'); ?>">Forgot password?</a></p> -->
                         <p>Don't have an account? <a href="<?= base_url('register'); ?>" class="link-info">Register here</a></p>
                     </form>
 
