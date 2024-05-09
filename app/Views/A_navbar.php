@@ -23,12 +23,18 @@
                 <li class="nav-item <?= service('router')->getMatchedRoute()[0] == 'order_management' ? 'active' : ''; ?>">
                     <a class="nav-link" href="<?= base_url('order_management'); ?>"><i class="bi bi-bag-check"></i> Order Management</a>
                 </li>
-                <!-- <li class="nav-item <?= service('router')->getMatchedRoute()[0] == 'login' ? 'active' : ''; ?>">
-                    <a class="nav-link" href="<?= base_url(''); ?>"><i class="bi bi-person-circle"></i> Log in</a>
-                </li> -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <?= session('user_role') ?>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="<?= base_url('logout'); ?>">Sign out</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
+
 
 <!-- End of Navbar -->

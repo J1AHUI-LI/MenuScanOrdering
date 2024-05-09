@@ -1,9 +1,6 @@
 <!-- Sidebar Offcanvas -->
 <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-light">
     <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 min-vh-100">
-        <a href="#" class="d-block align-items-center pb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-            <span class="fs-5">MenuScanOrder</span>
-        </a>
         <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
             <li>
                 <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
@@ -11,7 +8,7 @@
                 </a>
                 <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
                     <li class="w-100">
-                        <a href="<?= base_url('revenue'); ?>" class="nav-link px-0"> <span class="d-none d-sm-inline"> Revenue</span></a>
+                        <a href="<?= base_url('dashboard'); ?>" class="nav-link px-0"> <span class="d-none d-sm-inline"> Today's Menu</span></a>
                     </li>
                     <li class="w-100">
                         <a href="<?= base_url('user_management'); ?>" class="nav-link px-0"> <span class="d-none d-sm-inline"> User Management</span></a>
@@ -26,9 +23,6 @@
                 <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
                     <li>
                         <a href="<?= base_url('menu_management'); ?>" class="nav-link px-0"> <span class="d-none d-sm-inline">Items</span></a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url('admin_menu'); ?>" class="nav-link px-0"> <span class="d-none d-sm-inline">Menu</span></a>
                     </li>
                 </ul>
             </li>
@@ -64,18 +58,6 @@
             </li>
         </ul>
         <hr>
-        <!-- user state -->
-        <div class="dropdown pb-4">
-            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="<?= base_url('img/uifaces-popular-image.jpg'); ?>" alt="hugenerd" width="30" height="30" class="rounded-circle">
-                <span class="d-none d-sm-inline mx-1"><?= session('user_role') ?></span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                <li><a class="dropdown-item" href="<?= base_url('logout'); ?>">Sign out</a></li>
-            </ul>
-        </div>
-        <!-- end of user state -->
-
     </div>
 </div>
 <!-- End of Sidebar Offcanvas -->

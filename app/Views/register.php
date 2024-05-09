@@ -2,7 +2,17 @@
 <html lang="en">
 <?php include 'A_head.php'; ?>
 <body>
-    <?php include 'A_user_navbar.php'; ?>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light Navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="<?= base_url(''); ?>">
+                <img src="<?= base_url('img/buns_logo.png'); ?>" alt="Logo" height="70" class="d-inline-block align-text-top">
+                <span>MenuScanOrder</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
 
     <!--  Register Form  -->
     <section class="register-form" style="min-height: 100vh;">

@@ -16,6 +16,14 @@ class OrderingController extends BaseController
 
     public function index()
     {
+        // 获取传递的table_id参数
+        $tableID = $this->request->getGet('table_id');
+
+        // 将table_id保存到session中
+        if ($tableID) {
+            session()->set('table_id', $tableID);
+        }
+
         if ($this->request->getMethod() === 'post') {
             // Receive form data
             $username = $this->request->getPost('Username');
@@ -53,8 +61,15 @@ class OrderingController extends BaseController
     }
 
 
+
     public function logout()
     {
+        // Check if user is logged in
+        if (!session()->has('user_id')) {
+            // If user is not logged in, do nothing
+            return redirect()->to(base_url(''));
+        }
+
         // Destroy the session
         $session = session();
         $session->destroy();
@@ -64,9 +79,16 @@ class OrderingController extends BaseController
     }
 
 
+
     public function dashboard()
     {
-        return view('dashboard');
+        $vendorModel = new \App\Models\VendorModel();
+        $data['vendors'] = $vendorModel->findAll();
+
+        $menuModel = new \App\Models\MenuModel();
+        $data['dishes'] = $menuModel->findAll();
+
+        return view('dashboard', $data);
     }
 
     public function menu_management()
@@ -78,17 +100,6 @@ class OrderingController extends BaseController
         $data['dishes'] = $menuModel->findAll();
 
         return view('menu_management', $data);
-    }
-
-    public function admin_menu()
-    {
-        $vendorModel = new \App\Models\VendorModel();
-        $data['vendors'] = $vendorModel->findAll();
-
-        $menuModel = new \App\Models\MenuModel();
-        $data['dishes'] = $menuModel->findAll();
-
-        return view('admin_menu', $data);
     }
 
     public function edit_dish($menuId)
@@ -285,7 +296,7 @@ class OrderingController extends BaseController
     {
         if ($this->request->getMethod() === 'post') {
             $itemName = $this->request->getVar('ItemName');
-            $price = $this->request->getVar('Price'); // 注意这里修改为正确的键
+            $price = $this->request->getVar('Price');
             $vendorId = $this->request->getVar('VendorID');
 
             $cart = session()->get('cart', []);
@@ -317,6 +328,47 @@ class OrderingController extends BaseController
         }
         return redirect()->to(base_url('menu'));
     }
+
+    public function submitOrder()
+    {
+        $orderModel = new \App\Models\OrderModel(); // 直接实例化OrderModel
+
+        // 获取当前用户的ID和table_id
+        $userID = session()->get('user_id');
+        $tableID = session()->get('table_id');
+
+        if (!$userID || !$tableID) {
+            // 如果无法获取用户ID或table_id，显示提示信息并重定向到菜单页面
+            echo '<script>alert("Please scan QR code before ordering. (You can use admin account login to find QR code");</script>';
+            return redirect()->to(base_url('menu'));
+        }
+
+        // 获取购物车中的商品信息
+        $cart = session()->get('cart', []);
+
+        // 插入订单信息到订单表中
+        $data = [
+            'UserID' => $userID,
+            'TableID' => $tableID, // 将table_id也保存到订单中
+            'Status' => 'Pending', // 假设初始状态为待处理
+            'OrderTime' => date('Y-m-d H:i:s'), // 当前时间
+        ];
+        $orderModel->insert($data); // 使用模型插入数据
+        $orderID = $orderModel->insertID(); // 获取刚插入的订单的ID
+
+        // 清空购物车
+        session()->remove('cart');
+
+        // 提示订单提交成功或重定向到菜单页面
+        $session = session();
+        $session->setFlashdata('order_success_message', 'Order submitted successfully.');
+        return redirect()->to(base_url('menu'));
+    }
+
+
+
+
+
 
     public function register()
     {

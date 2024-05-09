@@ -5,6 +5,14 @@
 </head>
 <body>
     <?php include 'A_user_navbar.php'; ?>
+    
+    <?php
+    $session = session();
+    $orderSuccessMessage = $session->getFlashdata('order_success_message');
+    if ($orderSuccessMessage) {
+        echo '<script>alert("' . $orderSuccessMessage . '");</script>';
+    }
+    ?>
 
     <!-- Section 1 -->
     <div class="section-1">

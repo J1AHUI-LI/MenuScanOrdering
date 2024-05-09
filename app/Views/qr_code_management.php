@@ -1,16 +1,15 @@
 <?= $this->extend('template') ?>
 <?= $this->section('content') ?>
 <!-- Main content -->
-
 <div class="col">
     <h1>QR Code Management</h1>
     <div class="row">
         <?php
         use chillerlan\QRCode\QRCode;
         use chillerlan\QRCode\QROptions;
-        
+
         require_once('./../vendor/autoload.php');
-        
+
         $options = new QROptions(
           [
             'eccLevel' => QRCode::ECC_L,
@@ -20,10 +19,12 @@
         );
 
         foreach ($Table as $table) {
-            $url = base_url('menu?table_id=' . $table['TableID']);
+            $url = base_url('?table_id=' . $table['TableID']);
+
+            $_SESSION['table_id'] = $table['TableID'];
+
             $qrcode = (new QRCode($options))->render($url);
         ?>
-
         <div class="col-md-4">
             <div class="table">
                 <h2>Table <?= $table['TableID'] ?></h2>

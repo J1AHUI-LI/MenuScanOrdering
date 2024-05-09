@@ -14,6 +14,8 @@ $routes->get('logout', 'OrderingController::logout');
 $routes->get('/register', 'OrderingController::register');
 $routes->post('/register', 'OrderingController::register');
 
+$routes->get('dashboard', 'OrderingController::dashboard');
+
 $routes->get('complete_order/(:num)', 'OrderingController::complete_order/$1', ['as' => 'complete_order']);
 $routes->get('cancel_order/(:num)', 'OrderingController::cancel_order/$1', ['as' => 'cancel_order']);
 $routes->get('view_order_details/(:num)', 'OrderingController::view_order_details/$1', ['as' => 'view_order_details']);
@@ -23,7 +25,6 @@ $routes->get('edit_table/(:num)', 'OrderingController::edit_table/$1', ['as' => 
 $routes->post('edit_table/(:num)', 'OrderingController::edit_table/$1', ['as' => 'edit_table']);
 $routes->get('delete_table/(:num)', 'OrderingController::delete_table/$1', ['as' => 'delete_table']);
 
-$routes->get('/dashboard', 'OrderingController::dashboard');
 
 $routes->get('menu_management', 'OrderingController::menu_management');
 $routes->get('edit_dish/(:num)', 'OrderingController::edit_dish/$1');
@@ -41,11 +42,10 @@ $routes->post('add_user', 'OrderingController::add_user');
 $routes->post('edit_user/(:num)', 'OrderingController::edit_user/$1');
 $routes->get('delete_user/(:num)', 'OrderingController::delete_user/$1');
 
-$routes->get('admin_menu', 'OrderingController::admin_menu');
-
 $routes->get('cart', 'OrderingController::cart');
 $routes->post('addToCart', 'OrderingController::addToCart');
 $routes->post('removeFromCart', 'OrderingController::removeFromCart');
+$routes->post('submitOrder', 'OrderingController::submitOrder');
 
 $routes->get('menu_forordering', 'OrderingController::menu_forordering');
 

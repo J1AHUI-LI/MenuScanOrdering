@@ -2,7 +2,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light Navbar">
     <div class="container-fluid">
-        <a class="navbar-brand d-flex align-items-center" href="<?= base_url('dashboard'); ?>">
+        <a class="navbar-brand d-flex align-items-center" href="<?= base_url('menu'); ?>">
             <img src="<?= base_url('img/buns_logo.png'); ?>" alt="Logo" height="70" class="d-inline-block align-text-top">
             <span>MenuScanOrder</span>
         </a>
@@ -13,6 +13,9 @@
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="<?= base_url('cart'); ?>">Shopping Cart</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= base_url('logout') ?>">Logout</a>
                 </li>
             </ul>
         </div>

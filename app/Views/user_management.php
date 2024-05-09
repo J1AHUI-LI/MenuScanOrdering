@@ -9,6 +9,7 @@
     <thead>
       <tr>
         <th scope="col">User ID</th>
+        <th scope="col">User Email</th>
         <th scope="col">First Name</th>
         <th scope="col">Last Name</th>
         <th scope="col">Role</th>
@@ -22,6 +23,7 @@
       <?php foreach ($users as $user): ?>
         <tr>
           <th scope="row"><?= esc($user['UserID']) ?></th>
+          <td><?= esc($user['Username']) ?></td>
           <td><?= esc($user['FirstName']) ?></td>
           <td><?= esc($user['LastName']) ?></td>
           <td><?= esc($user['Role']) ?></td>
