@@ -25,7 +25,6 @@ $routes->get('edit_table/(:num)', 'OrderingController::edit_table/$1', ['as' => 
 $routes->post('edit_table/(:num)', 'OrderingController::edit_table/$1', ['as' => 'edit_table']);
 $routes->get('delete_table/(:num)', 'OrderingController::delete_table/$1', ['as' => 'delete_table']);
 
-
 $routes->get('menu_management', 'OrderingController::menu_management');
 $routes->get('edit_dish/(:num)', 'OrderingController::edit_dish/$1');
 $routes->post('update_dish/(:num)', 'OrderingController::update_dish/$1');

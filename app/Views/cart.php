@@ -20,7 +20,12 @@
                                     <p>Item Name: <?= $cartItem['itemName'] ?></p>
                                     <p>Price: <?= $cartItem['price'] ?></p>
                                     <p>Vendor ID: <?= $cartItem['vendorId'] ?></p>
+                                    <p>Menu ID: <?= $cartItem['menuId'] ?></p> <!-- Display MenuID -->
                                 </div>
+                                <form method="post" action="<?= base_url('removeFromCart') ?>">
+                                    <input type="hidden" name="index" value="<?= $index ?>">
+                                    <button type="submit" class="btn btn-danger">Remove</button>
+                                </form>
                             </div>
                         </li>
                     <?php endforeach; ?>
@@ -34,6 +39,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- scripts here -->
     <script>
@@ -49,5 +55,6 @@
     </script>
     <?php include 'A_script.php'; ?>
 </body>
+
 </html>
 

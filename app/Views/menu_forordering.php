@@ -14,6 +14,7 @@
                         <input type="hidden" name="ItemName" value="<?= $dish['ItemName'] ?>">
                         <input type="hidden" name="Price" value="<?= $dish['Price'] ?>">
                         <input type="hidden" name="VendorID" value="<?= $dish['VendorID'] ?>">
+                        <input type="hidden" name="MenuID" value="<?= $dish['MenuID'] ?>">
 
                         <div class="card">
                             <?php

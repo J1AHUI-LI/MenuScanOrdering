@@ -16,10 +16,8 @@ class OrderingController extends BaseController
 
     public function index()
     {
-        // 获取传递的table_id参数
         $tableID = $this->request->getGet('table_id');
 
-        // 将table_id保存到session中
         if ($tableID) {
             session()->set('table_id', $tableID);
         }
@@ -80,8 +78,14 @@ class OrderingController extends BaseController
 
 
 
+    /**
+     * Displays the dashboard with vendor and dish information.
+     *
+     * @return mixed
+     */
     public function dashboard()
     {
+        // Retrieve vendor and dish information
         $vendorModel = new \App\Models\VendorModel();
         $data['vendors'] = $vendorModel->findAll();
 
@@ -91,8 +95,14 @@ class OrderingController extends BaseController
         return view('dashboard', $data);
     }
 
+    /**
+     * Displays the menu management page with vendor and dish information.
+     *
+     * @return mixed
+     */
     public function menu_management()
     {
+        // Retrieve vendor and dish information
         $vendorModel = new \App\Models\VendorModel();
         $data['vendors'] = $vendorModel->findAll();
 
@@ -102,6 +112,12 @@ class OrderingController extends BaseController
         return view('menu_management', $data);
     }
 
+    /**
+     * Displays the edit dish form for a specific dish.
+     *
+     * @param int $menuId The ID of the dish to edit
+     * @return mixed
+     */
     public function edit_dish($menuId)
     {
         $menuModel = new \App\Models\MenuModel();
@@ -111,7 +127,12 @@ class OrderingController extends BaseController
         return view('menu_management', $data);
     }
 
-
+    /**
+     * Updates the details of a specific dish.
+     *
+     * @param int $menuId The ID of the dish to update
+     * @return mixed
+     */
     public function update_dish($menuId)
     {
         $menuModel = new \App\Models\MenuModel();
@@ -127,6 +148,12 @@ class OrderingController extends BaseController
         return redirect()->to(base_url('menu_management'));
     }
 
+    /**
+     * Deletes a specific dish.
+     *
+     * @param int $menuId The ID of the dish to delete
+     * @return mixed
+     */
     public function delete_dish($menuId)
     {
         $menuModel = new \App\Models\MenuModel();
@@ -135,6 +162,11 @@ class OrderingController extends BaseController
         return redirect()->to(base_url('menu_management'));
     }
 
+    /**
+     * Adds a new dish to the menu.
+     *
+     * @return mixed
+     */
     public function add_dish()
     {
         $menuModel = new \App\Models\MenuModel();
@@ -151,18 +183,28 @@ class OrderingController extends BaseController
         return redirect()->to(base_url('menu_management'));
     }
 
-
+    /**
+     * Displays the table management page with all table information.
+     *
+     * @return mixed
+     */
     public function table_management()
     {
-        // 创建一个 TablesModel 实例
+        // Create an instance of TablesModel
         $tablemodel = new \App\Models\TablesModel();
-        // 从数据库中获取所有表格信息
+        // Retrieve all table information from the database
         $data['tables'] = $tablemodel->findAll();
 
-        // 将数据传递给视图进行渲染
+        // Pass the data to the view for rendering
         return view('table_management', $data);
     }
 
+    /**
+     * Edits the status of a specific table.
+     *
+     * @param int $tableId The ID of the table to edit
+     * @return mixed
+     */
     public function edit_table($tableId)
     {
         if ($this->request->getMethod() === 'post') {
@@ -188,6 +230,11 @@ class OrderingController extends BaseController
         return redirect()->to(base_url('table_management'));
     }
 
+    /**
+     * Adds a new table to the system.
+     *
+     * @return mixed
+     */
     public function add_table()
     {
         if ($this->request->getMethod() === 'post') {
@@ -213,7 +260,12 @@ class OrderingController extends BaseController
         return redirect()->to(base_url('table_management'));
     }
 
-
+    /**
+     * Deletes a specific table from the system.
+     *
+     * @param int $tableId The ID of the table to delete
+     * @return mixed
+     */
     public function delete_table($tableId)
     {
         $tableModel = new \App\Models\TablesModel();
@@ -233,6 +285,11 @@ class OrderingController extends BaseController
         return redirect()->to(base_url('table_management'));
     }
 
+    /**
+     * Displays the order management page with all order information.
+     *
+     * @return mixed
+     */
     public function order_management()
     {
         $orderModel = new \App\Models\OrderModel();
@@ -241,6 +298,12 @@ class OrderingController extends BaseController
         return view('order_management', $data);
     }
 
+    /**
+     * Marks a specific order as complete.
+     *
+     * @param int $orderId The ID of the order to mark as complete
+     * @return mixed
+     */
     public function complete_order($orderId)
     {
         $orderModel = new \App\Models\OrderModel();
@@ -250,6 +313,12 @@ class OrderingController extends BaseController
         return redirect()->to(base_url('order_management'));
     }
 
+    /**
+     * Cancels a specific order.
+     *
+     * @param int $orderId The ID of the order to cancel
+     * @return mixed
+     */
     public function cancel_order($orderId)
     {
         $orderModel = new \App\Models\OrderModel();
@@ -259,21 +328,60 @@ class OrderingController extends BaseController
         return redirect()->to(base_url('order_management'));
     }
 
+    /**
+     * Displays the details of a specific order.
+     *
+     * @param int $orderId The ID of the order to view
+     * @return mixed
+     */
     public function view_order_details($orderId)
     {
         $orderModel = new \App\Models\OrderModel();
-        $orderModel->update($orderId, ['OrderTime' => date('Y-m-d H:i:s')]);
+        $order = $orderModel->find($orderId);
 
-        $data['orders'] = $orderModel->findAll();
+        if (!$order) {
+            // Handle case where order is not found
+            // For example, redirect to an error page
+            return redirect()->to(base_url('error'));
+        }
 
-        return view('order_management', $data);
+        // Get the MenuIDs from the order and split them into an array
+        $menuIDs = explode(',', $order['MenuIDs']);
+
+        // Get the menu items corresponding to the MenuIDs
+        $menuModel = new \App\Models\MenuModel();
+        $menuItems = [];
+        foreach ($menuIDs as $menuID) {
+            $menuItem = $menuModel->find($menuID);
+            if ($menuItem) {
+                $menuItems[] = $menuItem;
+            }
+        }
+
+        $data['order'] = $order;
+        $data['menuItems'] = $menuItems;
+
+        return view('order_details', $data);
     }
 
+
+
+
+    /**
+     * Displays the menu page.
+     *
+     * @return mixed
+     */
     public function menu()
     {
         return view('menu');
     }
 
+    /**
+     * Displays the menu for ordering with vendor and dish information.
+     *
+     * @return mixed
+     */
     public function menu_forordering()
     {
         $vendorModel = new \App\Models\VendorModel();
@@ -285,6 +393,11 @@ class OrderingController extends BaseController
         return view('menu_forordering', $data);
     }
 
+    /**
+     * Displays the cart page with the current cart items.
+     *
+     * @return mixed
+     */
     public function cart()
     {
         $cart = session()->get('cart', []);
@@ -292,27 +405,43 @@ class OrderingController extends BaseController
         return view('cart');
     }
 
+    /**
+     * Adds a selected item to the cart.
+     *
+     * @return mixed
+     */
     public function addToCart()
     {
         if ($this->request->getMethod() === 'post') {
             $itemName = $this->request->getVar('ItemName');
             $price = $this->request->getVar('Price');
             $vendorId = $this->request->getVar('VendorID');
+            $menuId = $this->request->getVar('MenuID'); // Corrected case for MenuID
 
             $cart = session()->get('cart', []);
             $cartItem = [
                 'itemName' => $itemName,
                 'price' => $price,
-                'vendorId' => $vendorId
+                'vendorId' => $vendorId,
+                'menuId' => $menuId, // Add MenuID to the cart item
             ];
+            
+            var_dump($cartItem); // Check if MenuID is included in the cart item
+            
             $cart[] = $cartItem;
             session()->set('cart', $cart);
 
-            return redirect()->to(base_url('cart')); // Redirect to cart page
+            return redirect()->to(base_url('menu_forordering')); // Redirect to menu_forordering page
         }
         return redirect()->to(base_url('menu'));
     }
 
+
+    /**
+     * Removes an item from the cart.
+     *
+     * @return mixed
+     */
     public function removeFromCart()
     {
         if ($this->request->getMethod() === 'post') {
@@ -329,37 +458,47 @@ class OrderingController extends BaseController
         return redirect()->to(base_url('menu'));
     }
 
+    /**
+     * Submits the order by inserting it into the database and clearing the cart.
+     *
+     * @return mixed
+     */
     public function submitOrder()
     {
-        $orderModel = new \App\Models\OrderModel(); // 直接实例化OrderModel
+        $orderModel = new \App\Models\OrderModel();
 
-        // 获取当前用户的ID和table_id
+        // Get the current user's ID and table_id
         $userID = session()->get('user_id');
         $tableID = session()->get('table_id');
 
         if (!$userID || !$tableID) {
-            // 如果无法获取用户ID或table_id，显示提示信息并重定向到菜单页面
+            // If unable to get userID or table_id, display a prompt and redirect to the menu page
             echo '<script>alert("Please scan QR code before ordering. (You can use admin account login to find QR code");</script>';
             return redirect()->to(base_url('menu'));
         }
 
-        // 获取购物车中的商品信息
+        // Get the cart items
         $cart = session()->get('cart', []);
 
-        // 插入订单信息到订单表中
+        // Extract MenuIDs from cart items
+        $menuIDs = array_column($cart, 'menuId');
+
+        // Insert order information into the order table
         $data = [
             'UserID' => $userID,
-            'TableID' => $tableID, // 将table_id也保存到订单中
-            'Status' => 'Pending', // 假设初始状态为待处理
-            'OrderTime' => date('Y-m-d H:i:s'), // 当前时间
+            'TableID' => $tableID,
+            'Status' => 'Pending',
+            'OrderTime' => date('Y-m-d H:i:s'),
+            'MenuIDs' => implode(',', $menuIDs), // Store MenuIDs as comma-separated string
         ];
-        $orderModel->insert($data); // 使用模型插入数据
-        $orderID = $orderModel->insertID(); // 获取刚插入的订单的ID
+        $orderModel->insert($data); // Insert data using the model
 
-        // 清空购物车
+        $orderID = $orderModel->insertID(); // Get the ID of the newly inserted order
+
+        // Clear the cart
         session()->remove('cart');
 
-        // 提示订单提交成功或重定向到菜单页面
+        // Display a success message and redirect to the menu page
         $session = session();
         $session->setFlashdata('order_success_message', 'Order submitted successfully.');
         return redirect()->to(base_url('menu'));
@@ -367,9 +506,11 @@ class OrderingController extends BaseController
 
 
 
-
-
-
+    /**
+     * Registers a new user.
+     *
+     * @return mixed
+     */
     public function register()
     {
         if ($this->request->getMethod() === 'post') {
@@ -407,51 +548,63 @@ class OrderingController extends BaseController
         return view('register');
     }
 
-
-
-    public function check_revenue()
-    {
-        return view('revenue');
-    }
-    
+    /**
+     * Displays the user management view with a list of all users.
+     *
+     * @return mixed
+     */
     public function user_management()
     {
         $userModel = new \App\Models\UserModel();
-        $data['users'] = $userModel->findAll(); // 获取所有用户信息
+        $data['users'] = $userModel->findAll(); // Get all user information
 
-        return view('user_management', $data); // 加载用户管理页面，并传递用户信息数组到视图中
+        return view('user_management', $data); // Load the user management page and pass the user information array to the view
     }
 
-    // 编辑用户信息
+    /**
+     * Edits a user's information.
+     *
+     * @param int $userID The ID of the user to edit
+     * @return mixed
+     */
     public function edit_user($userID)
     {
         $userModel = new \App\Models\UserModel();
 
-        // 从表单中获取用户输入的新信息
+        // Get the new information entered by the user from the form
         $newUserData = [
             'Role' => $this->request->getPost('Role'),
         ];
 
-        // 更新用户信息
+        // Update the user information
         $userModel->update($userID, $newUserData);
 
-        // 重定向到用户管理页面
+        // Redirect to the user management page
         return redirect()->to(base_url('user_management'));
     }
 
-    // 删除用户
+    /**
+     * Deletes a user.
+     *
+     * @param int $userID The ID of the user to delete
+     * @return mixed
+     */
     public function delete_user($userID)
     {
         $userModel = new \App\Models\UserModel();
 
-        // 删除指定用户
+        // Delete the specified user
         $userModel->delete($userID);
 
-        // 重定向到用户管理页面
+        // Redirect to the user management page
         return redirect()->to(base_url('user_management'));
     }
 
-
+    /**
+     * Adds a new user to the system.
+     *
+     * @return mixed
+     */
     public function add_user()
     {
         $password = $this->request->getPost('Password');
@@ -466,14 +619,19 @@ class OrderingController extends BaseController
             'Username' => $this->request->getPost('Email'), 
         ];
 
-        // 将数据插入数据库
+        // Insert data into the database
         $userModel = new \App\Models\UserModel();
         $userModel->insert($userData);
 
-        // 重定向到用户管理页面
+        // Redirect to the user management page
         return redirect()->to(base_url('user_management'));
     }
 
+    /**
+     * Displays the QR code management view.
+     *
+     * @return mixed
+     */
     public function qr_code_management()
     {
         $tableModel = new \App\Models\TablesModel();
@@ -481,7 +639,4 @@ class OrderingController extends BaseController
         $data['totalTables'] = count($data['Table']);
         return view('qr_code_management', $data);
     }
-
 }
-
-

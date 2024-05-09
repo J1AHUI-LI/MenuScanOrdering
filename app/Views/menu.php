@@ -91,7 +91,7 @@
                                 <p>
                                     <div class="quote">“</div>
                                     &ldquo;God bless me get full marks!!!!!!
-                                    Thank you marker.&rdquo;
+                                    &rdquo;
                                 </p>
                             </blockquote>
                         </div>

@@ -37,7 +37,6 @@
         ?>
     </div>
 </div>
-
 <!-- End of main content -->
 <?= $this->endSection() ?>
 

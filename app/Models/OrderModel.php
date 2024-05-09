@@ -8,6 +8,6 @@ class OrderModel extends Model
 {
     protected $table = 'Order';
     protected $primaryKey = 'OrderID';
-    protected $allowedFields = ['UserID', 'TableID', 'Status', 'OrderTime'];
+    protected $allowedFields = ['UserID', 'TableID', 'Status', 'OrderTime','MenuIDs'];
     protected $returnType = 'array';
 }
