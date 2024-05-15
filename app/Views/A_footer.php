@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <h5>MenuScanOrder</h5>
-                    <p>Streamlining the ordering process for restaurants, cafes, and coffee shops.</p>
+                    <p> God bless me. Full Marks!!!!</p>
                 </div>
                 <div class="col-md-6">
                     <h5>Contact Us</h5>
